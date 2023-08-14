@@ -1,9 +1,11 @@
 import express from "express";
-import shopify from './shopify.js';
-import * as dotenv from 'dotenv'
+import cors from "cors";
+import shopify from "./shopify.js";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(shopify);

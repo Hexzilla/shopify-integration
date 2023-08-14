@@ -12,7 +12,7 @@ const shopify = shopifyApi({
   apiVersion: LATEST_API_VERSION,
 });
 
-const session_sample = new Session({
+let session_sample = new Session({
   id: "offline_max-dev-2080.myshopify.com",
   shop: "max-dev-2080.myshopify.com",
   state: "988806641198443",
@@ -24,7 +24,7 @@ const session_sample = new Session({
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  res.send("Exodia");
+  res.send("<script>window.close()</script>");
 });
 
 router.get("/auth", async (req, res) => {
@@ -51,10 +51,20 @@ router.get("/auth/callback", async (req, res) => {
     });
 
     const session = callbackResponse.session;
+    session_sample = session;
+    console.log("session_sample", session_sample);
     //TODO - save session to database
   } catch (e) {}
 
   return res.redirect("/"); // or wherever you want your user to end up after OAuth completes
+});
+
+router.get("/status", async (req, res) => {
+  if (req.query.shop === session_sample.shop) {
+    res.json({ connected: true });
+  } else {
+    res.json({ connected: false });
+  }
 });
 
 router.get("/session", async (req, res) => {
